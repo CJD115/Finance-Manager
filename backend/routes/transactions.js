@@ -1,5 +1,10 @@
-// in routes/transactions.js
-router.get("/summary", async (req, res) => {
+import express from "express";
+import Transaction from "../models/Transaction.js";
+import { requireAuth } from "../middleware/auth.js";
+
+const router = express.Router();
+
+router.get("/summary", requireAuth, async (req, res) => {
   const { month, year } = req.query;
   const query = { user: req.userId };
 
@@ -21,3 +26,5 @@ router.get("/summary", async (req, res) => {
     balance: income - expense
   });
 });
+
+export default router; 
