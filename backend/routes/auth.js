@@ -1,6 +1,7 @@
 // routes/auth.js
 import express from "express";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 import User from "../models/User.js";
 
 const router = express.Router();
@@ -9,15 +10,27 @@ const router = express.Router();
 router.post("/register", async (req, res) => {
   try {
     const { email, password } = req.body;
-    const existing = await User.findOne({ email });
-    if (existing) return res.status(400).json({ message: "Email already in use" });
 
-    const user = new User({ email, password });
+    // Check if user exists
+    const existing = await User.findOne({ email });
+    if (existing) {
+      return res.status(400).json({ message: "Email already in use" });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create user
+    const user = new User({
+      email,
+      password: hashedPassword,
+    });
+
     await user.save();
 
-    res.status(201).json({ message: "User registered" });
+    return res.status(201).json({ message: "User registered" });
   } catch (err) {
-    console.error(err);
+    console.error("Register error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
@@ -26,22 +39,31 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    // Check user
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
 
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+    // Compare password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d"
-    });
+    // Create JWT
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
 
-    res.json({ token });
+    return res.json({ token });
   } catch (err) {
-    console.error(err);
+    console.error("Login error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
 export default router;
-
