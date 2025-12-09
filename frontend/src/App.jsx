@@ -4,11 +4,12 @@ import RegisterPage from "./pages/RegisterPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import TransactionsPage from "./pages/TransactionsPage.jsx";
 import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
+import Layout from "./components/Layout.jsx";
 
 function PrivateRoute({ children }) {
   const { token } = useAuth();
   if (!token) return <Navigate to="/login" replace />;
-  return children;
+  return <Layout>{children}</Layout>;
 }
 
 export default function App() {

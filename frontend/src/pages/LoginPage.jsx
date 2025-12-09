@@ -5,7 +5,7 @@ import API from "../api.js";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { setToken } = useAuth();
+  const { setToken, setUser } = useAuth();
 
   const [form, setForm] = useState({
     email: "",
@@ -25,6 +25,14 @@ export default function LoginPage() {
     try {
       const res = await API.post("/auth/login", form);
       setToken(res.data.token);
+      
+      // Store user info (you'll need to modify your backend to return this)
+      // For now, extract email from the form
+      setUser({ 
+        email: form.email,
+        name: form.email.split('@')[0] // Extract name from email until backend provides it
+      });
+      
       navigate("/");
     } catch (err) {
       setError("Invalid login. Please try again.");
