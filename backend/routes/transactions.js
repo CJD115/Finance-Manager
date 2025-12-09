@@ -34,7 +34,7 @@ router.get("/summary", requireAuth, async (req, res) => {
 // CREATE a new transaction
 router.post("/", requireAuth, async (req, res) => {
   try {
-    const { type, amount, category, date, description } = req.body;
+    const { type, amount, category, date, description, currency, method, status } = req.body;
 
     const transaction = await Transaction.create({
       user: req.userId,
@@ -42,7 +42,10 @@ router.post("/", requireAuth, async (req, res) => {
       amount,
       category,
       date,
-      description
+      description,
+      currency,
+      method,
+      status
     });
 
     res.status(201).json(transaction);
@@ -50,6 +53,28 @@ router.post("/", requireAuth, async (req, res) => {
   } catch (err) {
     console.error("Error creating transaction:", err);
     res.status(400).json({ message: "Error creating transaction" });
+  }
+});
+
+// UPDATE a transaction
+router.put("/:id", requireAuth, async (req, res) => {
+  try {
+    const { type, amount, category, date, description, currency, method, status } = req.body;
+
+    const updated = await Transaction.findOneAndUpdate(
+      { _id: req.params.id, user: req.userId },
+      { type, amount, category, date, description, currency, method, status },
+      { new: true, runValidators: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ message: "Transaction not found" });
+    }
+
+    res.json(updated);
+  } catch (err) {
+    console.error("Error updating transaction:", err);
+    res.status(400).json({ message: "Error updating transaction" });
   }
 });
 

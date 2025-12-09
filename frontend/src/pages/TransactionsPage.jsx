@@ -7,6 +7,7 @@ export default function TransactionsPage() {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTransaction, setEditingTransaction] = useState(null);
 
   // Fetch all transactions on mount
   useEffect(() => {
@@ -25,13 +26,18 @@ export default function TransactionsPage() {
     }
   }
 
-  async function handleAddTransaction(formData) {
+  async function handleSubmitTransaction(formData) {
     try {
-      await API.post("/transactions", formData);
-      fetchTransactions();
-      setIsModalOpen(false);
+      if (editingTransaction) {
+        await API.put(`/transactions/${editingTransaction._id}`, formData);
+      } else {
+        await API.post("/transactions", formData);
+      }
+      await fetchTransactions();
+      handleCloseModal();
     } catch (err) {
-      console.error("Add transaction error:", err);
+      console.error(editingTransaction ? "Update error:" : "Add transaction error:", err);
+      alert(`Error: ${err.response?.data?.message || err.message}`);
     }
   }
 
@@ -44,18 +50,36 @@ export default function TransactionsPage() {
       console.error("Delete error:", err);
     }
   }
+
+  function handleOpenCreate() {
+    setEditingTransaction(null);
+    setIsModalOpen(true);
+  }
+
+  function handleEdit(transaction) {
+    setEditingTransaction(transaction);
+    setIsModalOpen(true);
+  }
+
+  function handleCloseModal() {
+    setIsModalOpen(false);
+    setEditingTransaction(null);
+  }
+
   return (
     <div className="bg-white min-h-full">
       <TransactionForm 
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleAddTransaction} 
+        onClose={handleCloseModal}
+        onSubmit={handleSubmitTransaction}
+        initialData={editingTransaction}
       />
       <TransactionTable 
         transactions={transactions} 
         loading={loading} 
         onDelete={handleDelete}
-        onAddNew={() => setIsModalOpen(true)}
+        onAddNew={handleOpenCreate}
+        onEdit={handleEdit}
       />
     </div>
   );

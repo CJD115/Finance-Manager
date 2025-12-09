@@ -1,22 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function TransactionForm({ isOpen, onClose, onSubmit }) {
-  const [form, setForm] = useState({
-    type: "income",
-    currency: "USD",
-    amount: "",
-    name: "",
-    method: "",
-    category: "",
-    date: "",
-    status: ""
-  });
+const emptyForm = {
+  type: "income",
+  currency: "USD",
+  amount: "",
+  description: "",
+  method: "",
+  category: "",
+  date: "",
+  status: ""
+};
+
+export default function TransactionForm({ isOpen, onClose, onSubmit, initialData }) {
+  const [form, setForm] = useState(emptyForm);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (initialData) {
+      setForm({
+        ...emptyForm,
+        ...initialData,
+        amount: initialData.amount?.toString() || "",
+        date: initialData.date ? new Date(initialData.date).toISOString().slice(0, 10) : "",
+      });
+    } else {
+      setForm(emptyForm);
+    }
+  }, [isOpen, initialData]);
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     if (!form.amount || !form.category || !form.date) {
@@ -24,21 +41,16 @@ export default function TransactionForm({ isOpen, onClose, onSubmit }) {
       return;
     }
 
-    onSubmit(form);
-    
-    // Reset form
-    setForm({
-      type: "income",
-      currency: "USD",
-      amount: "",
-      name: "",
-      method: "",
-      category: "",
-      date: "",
-      status: ""
+    await onSubmit({
+      type: form.type,
+      amount: Number(form.amount),
+      category: form.category,
+      date: form.date,
+      description: form.description,
+      currency: form.currency,
+      method: form.method,
+      status: form.status
     });
-    
-    onClose();
   }
 
   if (!isOpen) return null;
@@ -54,8 +66,12 @@ export default function TransactionForm({ isOpen, onClose, onSubmit }) {
         </button>
 
         <div className="mb-6">
-          <h2 className="text-xl font-semibold text-neutral-900">Adding a new transaction</h2>
-          <p className="text-sm text-neutral-400 mt-1">Please fill in the form below</p>
+          <h2 className="text-xl font-semibold text-neutral-900">
+            {initialData ? "Edit transaction" : "Adding a new transaction"}
+          </h2>
+          <p className="text-sm text-neutral-400 mt-1">
+            {initialData ? "Update the fields below" : "Please fill in the form below"}
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -102,11 +118,11 @@ export default function TransactionForm({ isOpen, onClose, onSubmit }) {
           </div>
 
           <div>
-            <label className="block mb-2 text-neutral-700 text-xs font-medium">Name</label>
+            <label className="block mb-2 text-neutral-700 text-xs font-medium">Description</label>
             <input
               type="text"
-              name="name"
-              value={form.name}
+              name="description"
+              value={form.description}
               onChange={handleChange}
               placeholder="Name of transaction or short description"
               className="w-full p-3 bg-neutral-50 border-none rounded-lg text-neutral-600 text-sm placeholder:text-neutral-400"
