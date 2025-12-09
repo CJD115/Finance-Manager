@@ -28,16 +28,26 @@ export default function TransactionsPage() {
 
   async function handleSubmitTransaction(formData) {
     try {
+      console.log("Submitting transaction:", formData);
+      console.log("Editing transaction:", editingTransaction);
+      
       if (editingTransaction) {
-        await API.put(`/transactions/${editingTransaction._id}`, formData);
+        const url = `/transactions/${editingTransaction._id}`;
+        console.log("PUT URL:", url);
+        const response = await API.put(url, formData);
+        console.log("Update response:", response);
       } else {
-        await API.post("/transactions", formData);
+        console.log("POST URL:", "/transactions");
+        const response = await API.post("/transactions", formData);
+        console.log("Create response:", response);
       }
       await fetchTransactions();
       handleCloseModal();
     } catch (err) {
-      console.error(editingTransaction ? "Update error:" : "Add transaction error:", err);
-      alert(`Error: ${err.response?.data?.message || err.message}`);
+      console.error("Full error object:", err);
+      console.error("Error response:", err.response);
+      console.error("Error config:", err.config);
+      alert(`Error: ${err.response?.data?.message || err.message}\n\nCheck console for details.`);
     }
   }
 
