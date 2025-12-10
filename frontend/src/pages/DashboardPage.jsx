@@ -7,6 +7,8 @@ import MoneyFlow from "../components/MoneyFlow.jsx";
 import BudgetWidget from "../components/BudgetWidget.jsx";
 import RecentTransactions from "../components/RecentTransactions.jsx";
 import SavingGoals from "../components/SavingGoals.jsx";
+import LoadingSpinner from "../components/LoadingSpinner.jsx";
+import { getCategoryIcon, formatTransactionDate } from "../utils/helpers.js";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -30,12 +32,7 @@ export default function DashboardPage() {
       const res = await API.get("/transactions");
       // Get the 5 most recent transactions
       const recent = res.data.slice(0, 5).map(t => ({
-        date: new Date(t.date).toLocaleDateString('en-US', { 
-          day: 'numeric', 
-          month: 'short', 
-          hour: '2-digit', 
-          minute: '2-digit' 
-        }),
+        date: formatTransactionDate(t.date),
         amount: `${t.type === 'expense' ? '- ' : '+ '}$${t.amount.toLocaleString()}`,
         name: t.description || t.category,
         method: t.method || 'Cash',
@@ -71,25 +68,6 @@ export default function DashboardPage() {
     }
   }
 
-  // Helper function to assign icons based on category
-  function getCategoryIcon(category) {
-    const iconMap = {
-      'Subscription': '▶️',
-      'Shopping': '🏪',
-      'Cafe & Restaurants': '🍜',
-      'Food & Groceries': '🛒',
-      'Entertainment': '🎬',
-      'Transportation': '🚗',
-      'Health & Beauty': '💄',
-      'Traveling': '✈️',
-      'Investments': '📈',
-      'Salary': '💰',
-      'Freelance': '💼',
-      'Business': '🏢',
-    };
-    return iconMap[category] || '💳';
-  }
-
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -110,16 +88,12 @@ export default function DashboardPage() {
     { name: 'New house', saved: 150000, target: 150000 },
   ];
 
+  if (loading) {
+    return <LoadingSpinner message="Loading your dashboard..." />;
+  }
+
   return (
     <div className="min-h-screen bg-neutral-100 p-8">
-      {loading && (
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-lg text-neutral-600">Loading...</div>
-        </div>
-      )}
-      
-      {!loading && (
-        <>
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-6">
@@ -200,8 +174,6 @@ export default function DashboardPage() {
         </div>
         <SavingGoals goals={savingGoalsData} />
       </div>
-      </>
-      )}
     </div>
   );
 }

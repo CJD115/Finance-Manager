@@ -5,6 +5,7 @@ import DashboardPage from "./pages/DashboardPage.jsx";
 import TransactionsPage from "./pages/TransactionsPage.jsx";
 import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
 import Layout from "./components/Layout.jsx";
+import ErrorBoundary from "./components/ErrorBoundary.jsx";
 
 function PrivateRoute({ children }) {
   const { token } = useAuth();
@@ -14,27 +15,29 @@ function PrivateRoute({ children }) {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route
-          path="/"
-          element={
-            <PrivateRoute>
-              <DashboardPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/transactions"
-          element={
-            <PrivateRoute>
-              <TransactionsPage />
-            </PrivateRoute>
-          }
-        />
-      </Routes>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <DashboardPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/transactions"
+            element={
+              <PrivateRoute>
+                <TransactionsPage />
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }

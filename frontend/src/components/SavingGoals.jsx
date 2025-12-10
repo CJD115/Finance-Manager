@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 export default function SavingGoals({ goals }) {
   return (
     <div className="bg-white rounded-2xl border border-neutral-200 p-6">

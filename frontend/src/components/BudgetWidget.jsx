@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 export default function BudgetWidget({ spent, total, categories }) {
   const percentage = (spent / total) * 100;
 
@@ -33,8 +35,8 @@ export default function BudgetWidget({ spent, total, categories }) {
             />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center flex-col">
-            <span className="text-xs text-neutral-500">$400</span>
-            <span className="text-2xl font-bold text-neutral-900">${spent}</span>
+            <span className="text-xs text-neutral-500">Remaining</span>
+            <span className="text-2xl font-bold text-neutral-900">${Math.round(total - spent)}</span>
           </div>
         </div>
       </div>

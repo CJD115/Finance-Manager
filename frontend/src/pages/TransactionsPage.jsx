@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import API from "../api.js";
 import TransactionForm from "../components/TransactionForm.jsx";
 import TransactionTable from "../components/TransactionTable.jsx";
+import LoadingSpinner from "../components/LoadingSpinner.jsx";
 
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState([]);
@@ -74,6 +75,10 @@ export default function TransactionsPage() {
   function handleCloseModal() {
     setIsModalOpen(false);
     setEditingTransaction(null);
+  }
+
+  if (loading && transactions.length === 0) {
+    return <LoadingSpinner message="Loading transactions..." />;
   }
 
   return (

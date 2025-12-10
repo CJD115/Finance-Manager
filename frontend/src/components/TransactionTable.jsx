@@ -1,4 +1,6 @@
 import { useState } from "react";
+import PropTypes from 'prop-types';
+import EmptyState from "./EmptyState.jsx";
 
 export default function TransactionTable({ transactions, loading, onDelete, onAddNew, onEdit }) {
   const [openMenuId, setOpenMenuId] = useState(null);
@@ -25,14 +27,14 @@ export default function TransactionTable({ transactions, loading, onDelete, onAd
           </button>
         </div>
 
-        {loading ? (
-          <div className="flex-1 flex items-center justify-center">
-            <p className="text-neutral-400">Loading...</p>
-          </div>
-        ) : transactions.length === 0 ? (
-          <div className="flex-1 flex items-center justify-center">
-            <p className="text-neutral-400">No transactions found.</p>
-          </div>
+        {transactions.length === 0 ? (
+          <EmptyState
+            icon="💳"
+            title="No transactions yet"
+            message="Start tracking your finances by adding your first transaction"
+            actionLabel="Add Transaction"
+            onAction={onAddNew}
+          />
         ) : (
           <div className="flex-1 overflow-auto">
             <table className="w-full text-left border-collapse">

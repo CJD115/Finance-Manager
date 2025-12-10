@@ -1,5 +1,15 @@
+import PropTypes from 'prop-types';
+
 export default function MoneyFlow({ data }) {
-  const maxValue = Math.max(...data.map(m => m.income + m.expense));
+  const maxValue = data.length > 0 ? Math.max(...data.map(m => m.income + m.expense)) : 1;
+  
+  if (!data || data.length === 0) {
+    return (
+      <div className="bg-white rounded-2xl border border-neutral-200 p-6 h-full flex items-center justify-center">
+        <p className="text-neutral-400">No data available for money flow chart</p>
+      </div>
+    );
+  }
   
   return (
     <div className="bg-white rounded-2xl border border-neutral-200 p-6 h-full flex flex-col">
