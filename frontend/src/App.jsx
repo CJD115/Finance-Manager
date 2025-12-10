@@ -4,6 +4,7 @@ import RegisterPage from "./pages/RegisterPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import TransactionsPage from "./pages/TransactionsPage.jsx";
 import GoalsPage from "./pages/GoalsPage.jsx";
+import BudgetPage from "./pages/BudgetPage.jsx";
 import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
 import Layout from "./components/Layout.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
@@ -42,6 +43,14 @@ export default function App() {
             element={
               <PrivateRoute>
                 <GoalsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/budget"
+            element={
+              <PrivateRoute>
+                <BudgetPage />
               </PrivateRoute>
             }
           />
