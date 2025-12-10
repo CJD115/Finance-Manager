@@ -7,23 +7,33 @@ import rateLimit from "express-rate-limit";
 
 const router = express.Router();
 
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // limit each IP to 10 requests per windowMs
+  message: "Too many login attempts from this IP, please try again later.",
+});
+
 // POST /auth/register
-router.post("/register", async (req, res) => {
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required" });
-  }
-
-  if (!email.trim() || !password.trim()) {
-    return res.status(400).json({ message: "Email and password cannot be empty" });
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return res.status(400).json({ message: "Invalid email format" });
-  }
-
+router.post("/register", loginLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
+    }
+
+    if (!email.trim() || !password.trim()) {
+      return res
+        .status(400)
+        .json({ message: "Email and password cannot be empty" });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
 
     // Check if user exists
     const existing = await User.findOne({ email });
@@ -50,22 +60,26 @@ router.post("/register", async (req, res) => {
 });
 
 // POST /auth/login
-router.post("/login", async (req, res) => {
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required" });
-  }
-
-  if (!email.trim() || !password.trim()) {
-    return res.status(400).json({ message: "Email and password cannot be empty" });
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return res.status(400).json({ message: "Invalid email format" });
-  }
-
+router.post("/login", loginLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
+    }
+
+    if (!email.trim() || !password.trim()) {
+      return res
+        .status(400)
+        .json({ message: "Email and password cannot be empty" });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
 
     // Check user
     const user = await User.findOne({ email });
@@ -80,11 +94,9 @@ router.post("/login", async (req, res) => {
     }
 
     // Create JWT
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "24h",
+    });
 
     return res.json({ token });
   } catch (err) {
