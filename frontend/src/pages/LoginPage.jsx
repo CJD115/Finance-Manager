@@ -168,7 +168,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right Side - Illustration */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-neutral-50 to-white items-center justify-center p-12 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-linear-to-br from-neutral-50 to-white items-center justify-center p-12 relative overflow-hidden">
         {/* Floating Feature Badges */}
         <div className="absolute top-20 right-20 flex flex-col gap-3">
           <div className="flex items-center gap-3 bg-white px-4 py-3 rounded-full shadow-lg">
