@@ -5,6 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.js";
 import transactionRoutes from "./routes/transactions.js";
+import goalRoutes from "./routes/goals.js";
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/auth", authRoutes);
 app.use("/transactions", transactionRoutes);
-
+app.use("/goals", goalRoutes);
 
 // Basic route to test
 app.get("/", (req, res) => {

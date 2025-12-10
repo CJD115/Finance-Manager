@@ -9,7 +9,7 @@ export default function RecentTransactions({ transactions }) {
           <select className="text-sm text-neutral-600 bg-neutral-100 rounded-lg px-3 py-2 border-none">
             <option>All accounts</option>
           </select>
-          <button className="text-sm text-neutral-600 hover:text-neutral-900 flex items-center gap-1">
+          <button className="text-sm text-neutral-600 hover:text-neutral-900 flex items-center gap-1" onClick={() => window.location.href = "https://finance-manager-mu-murex.vercel.app/transactions"}>
             See all <span>→</span>
           </button>
         </div>
