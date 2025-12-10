@@ -11,6 +11,10 @@ import SavingGoals from "../components/SavingGoals.jsx";
 export default function DashboardPage() {
   const { user } = useAuth();
   const [summary, setSummary] = useState({ income: 0, expense: 0, balance: 0 });
+  const [recentTransactions, setRecentTransactions] = useState([]);
+  const [moneyFlowData, setMoneyFlowData] = useState([]);
+  const [budgetData, setBudgetData] = useState({ spent: 0, total: 0, categories: [] });
+  const [loading, setLoading] = useState(true);
 
   async function fetchSummary() {
     try {
@@ -21,46 +25,101 @@ export default function DashboardPage() {
     }
   }
 
+  async function fetchRecentTransactions() {
+    try {
+      const res = await API.get("/transactions");
+      // Get the 5 most recent transactions
+      const recent = res.data.slice(0, 5).map(t => ({
+        date: new Date(t.date).toLocaleDateString('en-US', { 
+          day: 'numeric', 
+          month: 'short', 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        }),
+        amount: `${t.type === 'expense' ? '- ' : '+ '}$${t.amount.toLocaleString()}`,
+        name: t.description || t.category,
+        method: t.method || 'Cash',
+        category: t.category,
+        icon: getCategoryIcon(t.category),
+        type: t.type
+      }));
+      setRecentTransactions(recent);
+    } catch (err) {
+      console.error("Transactions error:", err);
+    }
+  }
+
+  async function fetchMoneyFlow() {
+    try {
+      const res = await API.get("/transactions/monthly-flow?months=7");
+      setMoneyFlowData(res.data);
+    } catch (err) {
+      console.error("Money flow error:", err);
+    }
+  }
+
+  async function fetchBudgetBreakdown() {
+    try {
+      const res = await API.get("/transactions/category-breakdown?type=expense");
+      setBudgetData({
+        spent: res.data.total,
+        total: res.data.total * 1.1, // Set budget 10% higher than spent (you can adjust this)
+        categories: res.data.categories
+      });
+    } catch (err) {
+      console.error("Budget breakdown error:", err);
+    }
+  }
+
+  // Helper function to assign icons based on category
+  function getCategoryIcon(category) {
+    const iconMap = {
+      'Subscription': '▶️',
+      'Shopping': '🏪',
+      'Cafe & Restaurants': '🍜',
+      'Food & Groceries': '🛒',
+      'Entertainment': '🎬',
+      'Transportation': '🚗',
+      'Health & Beauty': '💄',
+      'Traveling': '✈️',
+      'Investments': '📈',
+      'Salary': '💰',
+      'Freelance': '💼',
+      'Business': '🏢',
+    };
+    return iconMap[category] || '💳';
+  }
+
   useEffect(() => {
     (async () => {
-      await fetchSummary();
+      setLoading(true);
+      await Promise.all([
+        fetchSummary(), 
+        fetchRecentTransactions(),
+        fetchMoneyFlow(),
+        fetchBudgetBreakdown()
+      ]);
+      setLoading(false);
     })();
   }, []);
 
-  // Mock data for charts
-  const moneyFlowData = [
-    { month: 'Jan', income: 80, expense: 60 },
-    { month: 'Feb', income: 70, expense: 65 },
-    { month: 'Mar', income: 90, expense: 55 },
-    { month: 'Apr', income: 85, expense: 70 },
-    { month: 'May', income: 75, expense: 60 },
-    { month: 'Jun', income: 65, expense: 50 },
-    { month: 'Jul', income: 70, expense: 55 },
-  ];
-
-  const budgetCategories = [
-    { name: 'Cafe & Restaurants', color: '#8470FF' },
-    { name: 'Entertainment', color: '#A498FF' },
-    { name: 'Investments', color: '#BFB7FF' },
-    { name: 'Food & Groceries', color: '#D6D2FF' },
-    { name: 'Health & Beauty', color: '#ECEAFF' },
-    { name: 'Traveling', color: '#F5F4FF' },
-  ];
-
+  // TODO: Implement Saving Goals backend
   const savingGoalsData = [
     { name: 'Macbook Pro', saved: 3600, target: 6000 },
     { name: 'New car', saved: 60000, target: 60000 },
     { name: 'New house', saved: 150000, target: 150000 },
   ];
 
-  const recentTransactionsData = [
-    { date: '25 Jul 12:30', amount: '- $10', name: 'YouTube', method: 'VISA **254', category: 'Subscription', icon: '▶️' },
-    { date: '26 Jul 18:00', amount: '- $150', name: 'Reserved', method: 'Mastercard **154', category: 'Shopping', icon: '🏪' },
-    { date: '27 Jul 9:00', amount: '- $80', name: 'Yaposhka', method: 'Mastercard **154', category: 'Cafe & Restaurants', icon: '🍜' },
-  ];
-
   return (
     <div className="min-h-screen bg-neutral-100 p-8">
+      {loading && (
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-lg text-neutral-600">Loading...</div>
+        </div>
+      )}
+      
+      {!loading && (
+        <>
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-6">
@@ -132,15 +191,17 @@ export default function DashboardPage() {
         <div className="col-span-2">
           <MoneyFlow data={moneyFlowData} />
         </div>
-        <BudgetWidget spent={5950} total={6400} categories={budgetCategories} />
+        <BudgetWidget spent={budgetData.spent} total={budgetData.total} categories={budgetData.categories} />
       </div>
 
       <div className="grid grid-cols-3 gap-6">
         <div className="col-span-2">
-          <RecentTransactions transactions={recentTransactionsData} />
+          <RecentTransactions transactions={recentTransactions} />
         </div>
         <SavingGoals goals={savingGoalsData} />
       </div>
+      </>
+      )}
     </div>
   );
 }
