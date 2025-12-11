@@ -5,7 +5,8 @@ import DashboardPage from "./pages/DashboardPage.jsx";
 import TransactionsPage from "./pages/TransactionsPage.jsx";
 import GoalsPage from "./pages/GoalsPage.jsx";
 import BudgetPage from "./pages/BudgetPage.jsx";
-import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import { useAuth } from "./hooks/useAuth";
 import Layout from "./components/Layout.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 
