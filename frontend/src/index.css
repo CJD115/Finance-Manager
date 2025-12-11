@@ -46,3 +46,98 @@ body {
   min-height: 100vh;
   width: 100%;
 }
+
+/* Dark mode styles */
+.dark {
+  color-scheme: dark;
+}
+
+/* Dark mode background colors */
+.dark body {
+  background-color: #111113;
+}
+
+.dark .bg-white {
+  background-color: #222226;
+}
+
+.dark .bg-neutral-50 {
+  background-color: #343438;
+}
+
+.dark .bg-neutral-100 {
+  background-color: #343438;
+}
+
+.dark .bg-neutral-200 {
+  background-color: #45454b;
+}
+
+/* Dark mode text colors */
+.dark .text-neutral-900 {
+  color: #efeff1;
+}
+
+.dark .text-neutral-800 {
+  color: #d0d0d4;
+}
+
+.dark .text-neutral-700 {
+  color: #a1a1a9;
+}
+
+.dark .text-neutral-600 {
+  color: #82828c;
+}
+
+.dark .text-neutral-500 {
+  color: #82828c;
+}
+
+.dark .text-neutral-400 {
+  color: #56565e;
+}
+
+/* Dark mode borders */
+.dark .border-neutral-100 {
+  border-color: #343438;
+}
+
+.dark .border-neutral-200 {
+  border-color: #45454b;
+}
+
+.dark .border-neutral-300 {
+  border-color: #56565e;
+}
+
+/* Dark mode hover states */
+.dark .hover\:bg-neutral-50:hover {
+  background-color: #343438;
+}
+
+.dark .hover\:bg-neutral-100:hover {
+  background-color: #45454b;
+}
+
+.dark .hover\:bg-neutral-200:hover {
+  background-color: #56565e;
+}
+
+/* Dark mode for specific components */
+.dark .bg-\[#F0EFF1\] {
+  background-color: #222226;
+}
+
+.dark input,
+.dark select,
+.dark textarea {
+  background-color: #343438;
+  color: #efeff1;
+  border-color: #45454b;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #82828c;
+}

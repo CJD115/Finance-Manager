@@ -1,6 +1,7 @@
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import { useState } from "react";
 import {
   LayoutDashboard,
@@ -19,6 +20,7 @@ import {
 export default function AppSidebar() {
   const location = useLocation();
   const { setToken } = useAuth();
+  const { isDarkMode, toggleTheme } = useTheme();
   const [collapsed, setCollapsed] = useState(false);
 
   const handleLogout = () => {
@@ -30,7 +32,7 @@ export default function AppSidebar() {
   return (
     <Sidebar
       collapsed={collapsed}
-      backgroundColor="#F0EFF1"
+      backgroundColor={isDarkMode ? "#222226" : "#F0EFF1"}
       width="250px"
       collapsedWidth="80px"
       style={{ height: "100vh", position: "sticky", top: 0 }}
@@ -41,16 +43,26 @@ export default function AppSidebar() {
             <div className="w-10 h-10 bg-primary-600 rounded-full flex items-center justify-center text-white font-bold">
               F
             </div>
-            <span className="text-xl font-semibold text-neutral-900">
+            <span
+              className={`text-xl font-semibold ${
+                isDarkMode ? "text-neutral-100" : "text-neutral-900"
+              }`}
+            >
               FinSet
             </span>
           </div>
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-2 hover:bg-neutral-200 rounded-lg transition"
+          className={`p-2 rounded-lg transition ${
+            isDarkMode ? "hover:bg-neutral-700" : "hover:bg-neutral-200"
+          }`}
         >
-          <span className="text-neutral-700">{collapsed ? "→" : "←"}</span>
+          <span
+            className={isDarkMode ? "text-neutral-300" : "text-neutral-700"}
+          >
+            {collapsed ? "→" : "←"}
+          </span>
         </button>
       </div>
 
@@ -58,14 +70,18 @@ export default function AppSidebar() {
         menuItemStyles={{
           button: ({ active }) => ({
             backgroundColor: active ? "#8470FF" : "transparent",
-            color: active ? "#FFFFFF" : "#56565E",
+            color: active ? "#FFFFFF" : isDarkMode ? "#a1a1a9" : "#56565E",
             borderRadius: "8px",
             margin: "4px 8px",
             padding: "12px",
             fontWeight: active ? "600" : "500",
             "&:hover": {
-              backgroundColor: active ? "#8470FF" : "#D0D0D4",
-              color: active ? "#FFFFFF" : "#111113",
+              backgroundColor: active
+                ? "#8470FF"
+                : isDarkMode
+                ? "#343438"
+                : "#D0D0D4",
+              color: active ? "#FFFFFF" : isDarkMode ? "#efeff1" : "#111113",
             },
           }),
         }}
@@ -131,11 +147,11 @@ export default function AppSidebar() {
         <Menu
           menuItemStyles={{
             button: {
-              color: "#56565E",
+              color: isDarkMode ? "#a1a1a9" : "#56565E",
               borderRadius: "8px",
               padding: "12px",
               "&:hover": {
-                backgroundColor: "#D0D0D4",
+                backgroundColor: isDarkMode ? "#343438" : "#D0D0D4",
               },
             },
           }}
@@ -148,10 +164,24 @@ export default function AppSidebar() {
 
         {!collapsed && (
           <div className="flex items-center gap-2 px-4 py-3">
-            <button className="w-10 h-10 bg-primary-600 rounded-full flex items-center justify-center text-white">
+            <button
+              onClick={toggleTheme}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition ${
+                !isDarkMode
+                  ? "bg-primary-600 text-white"
+                  : "bg-neutral-700 text-neutral-400"
+              }`}
+            >
               <Sun size={18} />
             </button>
-            <button className="w-10 h-10 bg-neutral-300 rounded-full flex items-center justify-center">
+            <button
+              onClick={toggleTheme}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition ${
+                isDarkMode
+                  ? "bg-primary-600 text-white"
+                  : "bg-neutral-300 text-neutral-600"
+              }`}
+            >
               <Moon size={18} />
             </button>
           </div>
