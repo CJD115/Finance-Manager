@@ -15,7 +15,12 @@ export default function DashboardPage() {
   const [summary, setSummary] = useState({ income: 0, expense: 0, balance: 0 });
   const [recentTransactions, setRecentTransactions] = useState([]);
   const [moneyFlowData, setMoneyFlowData] = useState([]);
-  const [budgetData, setBudgetData] = useState({ spent: 0, total: 0, categories: [] });
+  const [budgetData, setBudgetData] = useState({
+    spent: 0,
+    total: 0,
+    categories: [],
+  });
+  const [goalsData, setGoalsData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   async function fetchSummary() {
@@ -31,14 +36,16 @@ export default function DashboardPage() {
     try {
       const res = await API.get("/transactions");
       // Get the 5 most recent transactions
-      const recent = res.data.slice(0, 5).map(t => ({
+      const recent = res.data.slice(0, 5).map((t) => ({
         date: formatTransactionDate(t.date),
-        amount: `${t.type === 'expense' ? '- ' : '+ '}$${t.amount.toLocaleString()}`,
+        amount: `${
+          t.type === "expense" ? "- " : "+ "
+        }$${t.amount.toLocaleString()}`,
         name: t.description || t.category,
-        method: t.method || 'Cash',
+        method: t.method || "Cash",
         category: t.category,
         icon: getCategoryIcon(t.category),
-        type: t.type
+        type: t.type,
       }));
       setRecentTransactions(recent);
     } catch (err) {
@@ -57,14 +64,25 @@ export default function DashboardPage() {
 
   async function fetchBudgetBreakdown() {
     try {
-      const res = await API.get("/transactions/category-breakdown?type=expense");
+      const res = await API.get(
+        "/transactions/category-breakdown?type=expense"
+      );
       setBudgetData({
         spent: res.data.total,
         total: res.data.total * 1.1, // Set budget 10% higher than spent (you can adjust this)
-        categories: res.data.categories
+        categories: res.data.categories,
       });
     } catch (err) {
       console.error("Budget breakdown error:", err);
+    }
+  }
+
+  async function fetchGoals() {
+    try {
+      const res = await API.get("/goals");
+      setGoalsData(res.data.slice(0, 3)); // Get top 3 goals for dashboard
+    } catch (err) {
+      console.error("Goals error:", err);
     }
   }
 
@@ -72,25 +90,25 @@ export default function DashboardPage() {
     (async () => {
       setLoading(true);
       await Promise.all([
-        fetchSummary(), 
+        fetchSummary(),
         fetchRecentTransactions(),
         fetchMoneyFlow(),
-        fetchBudgetBreakdown()
+        fetchBudgetBreakdown(),
+        fetchGoals(),
       ]);
       setLoading(false);
     })();
   }, []);
 
-  // TODO: Implement Saving Goals backend
-  const savingGoalsData = [
-    { name: 'Macbook Pro', saved: 3600, target: 6000 },
-    { name: 'New car', saved: 60000, target: 60000 },
-    { name: 'New house', saved: 150000, target: 150000 },
-  ];
-
   if (loading) {
     return <LoadingSpinner message="Loading your dashboard..." />;
   }
+
+  // Calculate total savings from goals
+  const totalSavings = goalsData.reduce(
+    (sum, goal) => sum + (goal.currentAmount || 0),
+    0
+  );
 
   return (
     <div className="min-h-screen bg-neutral-100 p-8">
@@ -99,9 +117,11 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-3xl font-bold text-neutral-900">
-              Welcome back, {user?.name || 'User'}!
+              Welcome back, {user?.name || "User"}!
             </h1>
-            <p className="text-neutral-500 text-sm mt-1">It is the best time to manage your finances</p>
+            <p className="text-neutral-500 text-sm mt-1">
+              It is the best time to manage your finances
+            </p>
           </div>
           <div className="flex items-center gap-4">
             <button className="p-2 hover:bg-neutral-200 rounded-lg">
@@ -113,8 +133,12 @@ export default function DashboardPage() {
             </button>
             <div className="flex items-center gap-2">
               <div>
-                <p className="text-sm font-semibold text-neutral-900">{user?.name || 'User'}</p>
-                <p className="text-xs text-neutral-500">{user?.email || 'No email'}</p>
+                <p className="text-sm font-semibold text-neutral-900">
+                  {user?.name || "User"}
+                </p>
+                <p className="text-xs text-neutral-500">
+                  {user?.email || "No email"}
+                </p>
               </div>
             </div>
           </div>
@@ -129,7 +153,10 @@ export default function DashboardPage() {
             <span>⚙️</span>
             <span className="text-sm text-neutral-700">Manage widgets</span>
           </button>
-          <Link to="/transactions" className="ml-auto flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition">
+          <Link
+            to="/transactions"
+            className="ml-auto flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition"
+          >
             <span>+</span>
             <span className="text-sm font-semibold">Add new</span>
           </Link>
@@ -142,22 +169,26 @@ export default function DashboardPage() {
           title="Total balance"
           amount={`$${summary.balance.toLocaleString()}`}
           percentage="12.1%"
-          trend="up" />
+          trend="up"
+        />
         <StatCard
           title="Income"
           amount={`$${summary.income.toLocaleString()}`}
           percentage="6.3%"
-          trend="up" />
+          trend="up"
+        />
         <StatCard
           title="Expense"
           amount={`$${summary.expense.toLocaleString()}`}
           percentage="2.4%"
-          trend="down" />
+          trend="down"
+        />
         <StatCard
           title="Total savings"
-          amount="$32,913"
+          amount={`$${totalSavings.toLocaleString()}`}
           percentage="12.1%"
-          trend="up" />
+          trend="up"
+        />
       </div>
 
       {/* Main Content Grid */}
@@ -165,16 +196,19 @@ export default function DashboardPage() {
         <div className="col-span-2">
           <MoneyFlow data={moneyFlowData} />
         </div>
-        <BudgetWidget spent={budgetData.spent} total={budgetData.total} categories={budgetData.categories} />
+        <BudgetWidget
+          spent={budgetData.spent}
+          total={budgetData.total}
+          categories={budgetData.categories}
+        />
       </div>
 
       <div className="grid grid-cols-3 gap-6">
         <div className="col-span-2">
           <RecentTransactions transactions={recentTransactions} />
         </div>
-        <SavingGoals goals={savingGoalsData} />
+        <SavingGoals goals={goalsData} />
       </div>
     </div>
   );
 }
- 

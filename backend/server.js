@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/auth.js";
 import transactionRoutes from "./routes/transactions.js";
 import goalRoutes from "./routes/goals.js";
+import budgetRoutes from "./routes/budgets.js";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use("/auth", authRoutes);
 app.use("/transactions", transactionRoutes);
 app.use("/goals", goalRoutes);
+app.use("/budgets", budgetRoutes);
 
 // Basic route to test
 app.get("/", (req, res) => {
