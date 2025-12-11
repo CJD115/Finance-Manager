@@ -114,14 +114,14 @@ export default function GoalsPage() {
         <input
           type="text"
           placeholder="Search..."
-          className="px-4 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm"
+          className="px-4 py-2 bg-white border border-neutral-200 rounded-lg text-sm text-neutral-900 placeholder:text-neutral-400"
         />
-        <select className="px-4 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm">
+        <select className="px-4 py-2 bg-white border border-neutral-200 rounded-lg text-sm text-neutral-900 font-medium cursor-pointer hover:bg-neutral-50 transition">
           <option>This year</option>
           <option>Last year</option>
           <option>All time</option>
         </select>
-        <select className="px-4 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm">
+        <select className="px-4 py-2 bg-white border border-neutral-200 rounded-lg text-sm text-neutral-900 font-medium cursor-pointer hover:bg-neutral-50 transition">
           <option>Sort by: Date A-Z</option>
           <option>Sort by: Date Z-A</option>
           <option>Sort by: Amount</option>

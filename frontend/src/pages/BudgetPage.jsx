@@ -143,18 +143,18 @@ export default function BudgetPage() {
         <select
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(e.target.value)}
-          className="px-4 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm"
+          className="px-4 py-2 bg-white border border-neutral-200 rounded-lg text-sm text-neutral-900 font-medium cursor-pointer hover:bg-neutral-50 transition"
         >
           <option>This month</option>
           <option>Last month</option>
           <option>This year</option>
         </select>
-        <select className="px-4 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm">
+        <select className="px-4 py-2 bg-white border border-neutral-200 rounded-lg text-sm text-neutral-900 font-medium cursor-pointer hover:bg-neutral-50 transition">
           <option>Amount</option>
           <option>Category</option>
           <option>Status</option>
         </select>
-        <select className="px-4 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm">
+        <select className="px-4 py-2 bg-white border border-neutral-200 rounded-lg text-sm text-neutral-900 font-medium cursor-pointer hover:bg-neutral-50 transition">
           <option>Sort by: Default</option>
           <option>Sort by: Amount</option>
           <option>Sort by: Spent</option>
