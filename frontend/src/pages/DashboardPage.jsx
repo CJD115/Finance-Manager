@@ -9,6 +9,21 @@ import RecentTransactions from "../components/RecentTransactions.jsx";
 import SavingGoals from "../components/SavingGoals.jsx";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import { getCategoryIcon, formatTransactionDate } from "../utils/helpers.js";
+import {
+  Home,
+  CreditCard,
+  Wallet,
+  Target,
+  PieChart,
+  Settings,
+} from "lucide-react";
+import { FiHome, FiDollarSign, FiTarget } from "react-icons/fi"; // Feather icons
+import { HiOutlineHome, HiOutlineCreditCard } from "react-icons/hi2"; // Heroicons
+import {
+  HomeIcon,
+  CreditCardIcon,
+  WalletIcon,
+} from "@heroicons/react/24/outline";
 
 export default function DashboardPage() {
   const { user } = useAuth();

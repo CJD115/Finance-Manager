@@ -2,6 +2,22 @@ import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
+import {
+  Home,
+  CreditCard,
+  Wallet,
+  Target,
+  PieChart,
+  Settings,
+} from "lucide-react";
+import { FiHome, FiDollarSign, FiTarget } from 'react-icons/fi'; // Feather icons
+import { HiOutlineHome, HiOutlineCreditCard } from 'react-icons/hi2'; // Heroicons
+import {
+  HomeIcon,
+  CreditCardIcon,
+  WalletIcon,
+} from "@heroicons/react/24/outline";
+
 
 export default function AppSidebar() {
   const location = useLocation();
