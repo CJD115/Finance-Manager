@@ -1,25 +1,43 @@
+import {
+  Play,
+  ShoppingBag,
+  Coffee,
+  ShoppingCart,
+  Film,
+  Car,
+  Sparkles,
+  Plane,
+  TrendingUp,
+  Wallet,
+  Briefcase,
+  Building2,
+  Home,
+  ArrowLeftRight,
+  CreditCard,
+} from "lucide-react";
+
 // Helper function to assign icons based on category
 export function getCategoryIcon(category) {
   const iconMap = {
-    Subscription: "▶️",
-    Shopping: "🏪",
-    "Cafe & Restaurants": "🍜",
-    "Food & Groceries": "🛒",
-    Food: "🛒",
-    Entertainment: "🎬",
-    Transportation: "🚗",
-    Transport: "🚗",
-    "Health & Beauty": "💄",
-    Traveling: "✈️",
-    Investments: "📈",
-    Investment: "📈",
-    Salary: "💰",
-    Freelance: "💼",
-    Business: "🏢",
-    Rent: "🏠",
-    "Money transfer": "💸",
+    Subscription: Play,
+    Shopping: ShoppingBag,
+    "Cafe & Restaurants": Coffee,
+    "Food & Groceries": ShoppingCart,
+    Food: ShoppingCart,
+    Entertainment: Film,
+    Transportation: Car,
+    Transport: Car,
+    "Health & Beauty": Sparkles,
+    Traveling: Plane,
+    Investments: TrendingUp,
+    Investment: TrendingUp,
+    Salary: Wallet,
+    Freelance: Briefcase,
+    Business: Building2,
+    Rent: Home,
+    "Money transfer": ArrowLeftRight,
   };
-  return iconMap[category] || "💳";
+  return iconMap[category] || CreditCard;
 }
 
 // Format date for display

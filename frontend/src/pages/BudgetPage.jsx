@@ -3,6 +3,16 @@ import PropTypes from "prop-types";
 import API from "../api.js";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import EmptyState from "../components/EmptyState.jsx";
+import {
+  RefreshCw,
+  PiggyBank,
+  ShoppingBag,
+  Car,
+  Film,
+  Activity,
+  Lightbulb,
+  CreditCard,
+} from "lucide-react";
 
 /**
  * Budget page for managing spending limits by category
@@ -151,9 +161,9 @@ export default function BudgetPage() {
         </select>
         <button
           onClick={handleSync}
-          className="px-4 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm hover:bg-neutral-100"
+          className="px-4 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm hover:bg-neutral-100 flex items-center gap-2"
         >
-          🔄 Sync
+          <RefreshCw size={16} /> Sync
         </button>
         <button className="ml-auto px-4 py-2 text-primary-600 hover:bg-primary-50 rounded-lg text-sm">
           Reset all
@@ -390,25 +400,25 @@ BudgetCard.propTypes = {
 
 // Expense item component
 function ExpenseItem({ expense }) {
-  const icons = {
-    Food: "🍔",
-    Shopping: "🛍️",
-    Transportation: "🚗",
-    Transport: "🚗",
-    Entertainment: "🎬",
-    Health: "💊",
-    Utilities: "💡",
-    Other: "💳",
+  const iconMap = {
+    Food: ShoppingBag,
+    Shopping: ShoppingBag,
+    Transportation: Car,
+    Transport: Car,
+    Entertainment: Film,
+    Health: Activity,
+    Utilities: Lightbulb,
+    Other: CreditCard,
   };
 
   const isPositive = parseFloat(expense.percentage) > 0;
-  const icon = icons[expense.category] || "💳";
+  const IconComponent = iconMap[expense.category] || CreditCard;
 
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center text-lg">
-          {icon}
+        <div className="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center text-neutral-600">
+          <IconComponent size={18} />
         </div>
         <div>
           <p className="text-sm font-medium text-neutral-900">

@@ -1,4 +1,5 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
+import { ArrowUpRight } from "lucide-react";
 
 export default function BudgetWidget({ spent, total, categories }) {
   const percentage = (spent / total) * 100;
@@ -8,7 +9,7 @@ export default function BudgetWidget({ spent, total, categories }) {
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-semibold text-neutral-900">Budget</h2>
         <button className="text-neutral-400 hover:text-neutral-600">
-          <span>↗</span>
+          <ArrowUpRight size={18} />
         </button>
       </div>
 
@@ -36,7 +37,9 @@ export default function BudgetWidget({ spent, total, categories }) {
           </svg>
           <div className="absolute inset-0 flex items-center justify-center flex-col">
             <span className="text-xs text-neutral-500">Remaining</span>
-            <span className="text-2xl font-bold text-neutral-900">${Math.round(total - spent)}</span>
+            <span className="text-2xl font-bold text-neutral-900">
+              ${Math.round(total - spent)}
+            </span>
           </div>
         </div>
       </div>
@@ -45,7 +48,10 @@ export default function BudgetWidget({ spent, total, categories }) {
         {categories.map((cat, i) => (
           <div key={i} className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: cat.color }}></div>
+              <div
+                className="w-2 h-2 rounded-full"
+                style={{ backgroundColor: cat.color }}
+              ></div>
               <span className="text-neutral-600">{cat.name}</span>
             </div>
           </div>

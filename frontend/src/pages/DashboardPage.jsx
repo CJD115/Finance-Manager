@@ -10,6 +10,13 @@ import SavingGoals from "../components/SavingGoals.jsx";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import { getCategoryIcon, formatTransactionDate } from "../utils/helpers.js";
 import {
+  Search,
+  Bell,
+  Calendar,
+  Settings as SettingsIcon,
+  Plus,
+} from "lucide-react";
+import {
   Home,
   CreditCard,
   Wallet,
@@ -140,10 +147,10 @@ export default function DashboardPage() {
           </div>
           <div className="flex items-center gap-4">
             <button className="p-2 hover:bg-neutral-200 rounded-lg">
-              <span className="text-neutral-600">🔍</span>
+              <Search className="text-neutral-600" size={20} />
             </button>
             <button className="p-2 hover:bg-neutral-200 rounded-lg relative">
-              <span className="text-neutral-600">🔔</span>
+              <Bell className="text-neutral-600" size={20} />
               <span className="absolute top-1 right-1 w-2 h-2 bg-danger-500 rounded-full"></span>
             </button>
             <div className="flex items-center gap-2">

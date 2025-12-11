@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { ArrowUpRight } from "lucide-react";
 
 export default function SavingGoals({ goals }) {
   return (
@@ -6,7 +7,7 @@ export default function SavingGoals({ goals }) {
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-semibold text-neutral-900">Saving goals</h2>
         <button className="text-neutral-400 hover:text-neutral-600">
-          <span>↗</span>
+          <ArrowUpRight size={18} />
         </button>
       </div>
 
@@ -24,7 +25,9 @@ export default function SavingGoals({ goals }) {
             <div className="w-full bg-neutral-100 rounded-full h-2">
               <div
                 className="bg-primary-600 h-2 rounded-full transition-all"
-                style={{ width: `${(goal.currentAmount / goal.targetAmount) * 100}%` }}
+                style={{
+                  width: `${(goal.currentAmount / goal.targetAmount) * 100}%`,
+                }}
               ></div>
             </div>
             <div className="flex items-center justify-between mt-1">

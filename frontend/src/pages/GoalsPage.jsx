@@ -3,13 +3,18 @@ import PropTypes from "prop-types";
 import API from "../api.js";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import EmptyState from "../components/EmptyState.jsx";
+import { Target, Menu } from "lucide-react";
 
 /**
  * Goals page component for managing financial goals
  */
 export default function GoalsPage() {
   const [goals, setGoals] = useState([]);
-  const [summary, setSummary] = useState({ total: 0, thisYear: 0, statusCounts: {} });
+  const [summary, setSummary] = useState({
+    total: 0,
+    thisYear: 0,
+    statusCounts: {},
+  });
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingGoal, setEditingGoal] = useState(null);
@@ -92,7 +97,9 @@ export default function GoalsPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-semibold text-neutral-900">Goals</h1>
-          <p className="text-sm text-neutral-400 mt-1">Create, manage and monitor your savings</p>
+          <p className="text-sm text-neutral-400 mt-1">
+            Create, manage and monitor your savings
+          </p>
         </div>
         <button
           onClick={handleOpenCreate}
@@ -120,7 +127,7 @@ export default function GoalsPage() {
           <option>Sort by: Amount</option>
         </select>
         <button className="p-2 border border-neutral-200 rounded-lg hover:bg-neutral-50">
-          <span>☰</span>
+          <Menu size={18} />
         </button>
       </div>
 
@@ -138,8 +145,16 @@ export default function GoalsPage() {
           <div className="grid grid-cols-4 gap-4 mb-6">
             <SummaryCard label="Total goals" value={summary.total} />
             <SummaryCard label="This year" value={summary.thisYear} />
-            <SummaryCard label="Not started" value={summary.statusCounts.notStarted || 0} color="yellow" />
-            <SummaryCard label="In progress" value={summary.statusCounts.inProgress || 0} color="green" />
+            <SummaryCard
+              label="Not started"
+              value={summary.statusCounts.notStarted || 0}
+              color="yellow"
+            />
+            <SummaryCard
+              label="In progress"
+              value={summary.statusCounts.inProgress || 0}
+              color="green"
+            />
           </div>
 
           {/* Goals Grid */}
@@ -174,14 +189,16 @@ function SummaryCard({ label, value, color = "primary" }) {
   const colorClasses = {
     primary: "bg-primary-100 text-primary-600",
     yellow: "bg-warning-200 text-warning-500",
-    green: "bg-success-200 text-success-800"
+    green: "bg-success-200 text-success-800",
   };
 
   return (
     <div className="bg-neutral-50 rounded-xl p-4">
       <p className="text-xs text-neutral-500 mb-2">{label}</p>
       <div className="flex items-center gap-2">
-        <div className={`w-10 h-10 rounded-full ${colorClasses[color]} flex items-center justify-center font-bold text-lg`}>
+        <div
+          className={`w-10 h-10 rounded-full ${colorClasses[color]} flex items-center justify-center font-bold text-lg`}
+        >
           {value}
         </div>
       </div>
@@ -192,17 +209,20 @@ function SummaryCard({ label, value, color = "primary" }) {
 SummaryCard.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.number.isRequired,
-  color: PropTypes.oneOf(["primary", "yellow", "green"])
+  color: PropTypes.oneOf(["primary", "yellow", "green"]),
 };
 
 // Goal card component
 function GoalCard({ goal, onEdit, onDelete }) {
-  const percentage = Math.min((goal.currentAmount / goal.targetAmount) * 100, 100);
+  const percentage = Math.min(
+    (goal.currentAmount / goal.targetAmount) * 100,
+    100
+  );
   const statusColors = {
     "not started": { bg: "bg-warning-200", text: "text-warning-500" },
     "in progress": { bg: "bg-success-200", text: "text-success-800" },
-    "canceled": { bg: "bg-neutral-200", text: "text-neutral-600" },
-    "finished": { bg: "bg-primary-200", text: "text-primary-600" }
+    canceled: { bg: "bg-neutral-200", text: "text-neutral-600" },
+    finished: { bg: "bg-primary-200", text: "text-primary-600" },
   };
   const colors = statusColors[goal.status] || statusColors["not started"];
 
@@ -211,10 +231,16 @@ function GoalCard({ goal, onEdit, onDelete }) {
       <div className="flex items-start justify-between mb-4">
         <h3 className="font-semibold text-neutral-900">{goal.name}</h3>
         <div className="flex gap-2">
-          <button onClick={() => onEdit(goal)} className="text-neutral-400 hover:text-neutral-600">
+          <button
+            onClick={() => onEdit(goal)}
+            className="text-neutral-400 hover:text-neutral-600"
+          >
             ✏️
           </button>
-          <button onClick={() => onDelete(goal._id)} className="text-neutral-400 hover:text-danger-500">
+          <button
+            onClick={() => onDelete(goal._id)}
+            className="text-neutral-400 hover:text-danger-500"
+          >
             🗑️
           </button>
         </div>
@@ -229,7 +255,7 @@ function GoalCard({ goal, onEdit, onDelete }) {
             / ${goal.targetAmount.toLocaleString()}
           </span>
         </div>
-        
+
         {/* Progress bar */}
         <div className="w-full bg-neutral-100 rounded-full h-2 mb-2">
           <div
@@ -237,10 +263,14 @@ function GoalCard({ goal, onEdit, onDelete }) {
             style={{ width: `${percentage}%` }}
           ></div>
         </div>
-        <p className="text-xs text-neutral-500">{Math.round(percentage)}% of target amount</p>
+        <p className="text-xs text-neutral-500">
+          {Math.round(percentage)}% of target amount
+        </p>
       </div>
 
-      <div className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${colors.bg} ${colors.text}`}>
+      <div
+        className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${colors.bg} ${colors.text}`}
+      >
         {goal.status}
       </div>
     </div>
@@ -253,10 +283,10 @@ GoalCard.propTypes = {
     name: PropTypes.string.isRequired,
     currentAmount: PropTypes.number.isRequired,
     targetAmount: PropTypes.number.isRequired,
-    status: PropTypes.string.isRequired
+    status: PropTypes.string.isRequired,
   }).isRequired,
   onEdit: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired
+  onDelete: PropTypes.func.isRequired,
 };
 
 // Goal modal component
@@ -268,7 +298,7 @@ function GoalModal({ isOpen, onClose, onSubmit, initialData }) {
     deadline: "",
     category: "",
     status: "not started",
-    color: "#8470FF"
+    color: "#8470FF",
   });
 
   useEffect(() => {
@@ -277,10 +307,12 @@ function GoalModal({ isOpen, onClose, onSubmit, initialData }) {
         name: initialData.name || "",
         targetAmount: initialData.targetAmount?.toString() || "",
         currentAmount: initialData.currentAmount?.toString() || "",
-        deadline: initialData.deadline ? new Date(initialData.deadline).toISOString().slice(0, 10) : "",
+        deadline: initialData.deadline
+          ? new Date(initialData.deadline).toISOString().slice(0, 10)
+          : "",
         category: initialData.category || "",
         status: initialData.status || "not started",
-        color: initialData.color || "#8470FF"
+        color: initialData.color || "#8470FF",
       });
     }
   }, [initialData]);
@@ -303,7 +335,7 @@ function GoalModal({ isOpen, onClose, onSubmit, initialData }) {
       deadline: form.deadline || null,
       category: form.category,
       status: form.status,
-      color: form.color
+      color: form.color,
     });
   }
 
@@ -312,7 +344,10 @@ function GoalModal({ isOpen, onClose, onSubmit, initialData }) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-3xl p-8 w-full max-w-md relative shadow-2xl">
-        <button onClick={onClose} className="absolute top-6 right-6 text-neutral-400 hover:text-neutral-600">
+        <button
+          onClick={onClose}
+          className="absolute top-6 right-6 text-neutral-400 hover:text-neutral-600"
+        >
           ✕
         </button>
 
@@ -322,7 +357,9 @@ function GoalModal({ isOpen, onClose, onSubmit, initialData }) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block mb-2 text-neutral-700 text-xs font-medium">Goal Name</label>
+            <label className="block mb-2 text-neutral-700 text-xs font-medium">
+              Goal Name
+            </label>
             <input
               type="text"
               name="name"
@@ -336,7 +373,9 @@ function GoalModal({ isOpen, onClose, onSubmit, initialData }) {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block mb-2 text-neutral-700 text-xs font-medium">Target Amount</label>
+              <label className="block mb-2 text-neutral-700 text-xs font-medium">
+                Target Amount
+              </label>
               <input
                 type="number"
                 name="targetAmount"
@@ -349,7 +388,9 @@ function GoalModal({ isOpen, onClose, onSubmit, initialData }) {
             </div>
 
             <div>
-              <label className="block mb-2 text-neutral-700 text-xs font-medium">Current Amount</label>
+              <label className="block mb-2 text-neutral-700 text-xs font-medium">
+                Current Amount
+              </label>
               <input
                 type="number"
                 name="currentAmount"
@@ -363,7 +404,9 @@ function GoalModal({ isOpen, onClose, onSubmit, initialData }) {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block mb-2 text-neutral-700 text-xs font-medium">Deadline</label>
+              <label className="block mb-2 text-neutral-700 text-xs font-medium">
+                Deadline
+              </label>
               <input
                 type="date"
                 name="deadline"
@@ -374,7 +417,9 @@ function GoalModal({ isOpen, onClose, onSubmit, initialData }) {
             </div>
 
             <div>
-              <label className="block mb-2 text-neutral-700 text-xs font-medium">Status</label>
+              <label className="block mb-2 text-neutral-700 text-xs font-medium">
+                Status
+              </label>
               <select
                 name="status"
                 value={form.status}
@@ -390,7 +435,9 @@ function GoalModal({ isOpen, onClose, onSubmit, initialData }) {
           </div>
 
           <div>
-            <label className="block mb-2 text-neutral-700 text-xs font-medium">Category</label>
+            <label className="block mb-2 text-neutral-700 text-xs font-medium">
+              Category
+            </label>
             <input
               type="text"
               name="category"
@@ -426,5 +473,5 @@ GoalModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  initialData: PropTypes.object
+  initialData: PropTypes.object,
 };
