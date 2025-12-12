@@ -77,7 +77,7 @@ export default function DashboardPage() {
 
   async function fetchMoneyFlow() {
     try {
-      const res = await API.get("/transactions/monthly-flow?months=7");
+      const res = await API.get("/transactions/monthly-flow?months=12");
       setMoneyFlowData(res.data);
     } catch (err) {
       console.error("Money flow error:", err);
