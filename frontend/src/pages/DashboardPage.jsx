@@ -145,24 +145,14 @@ export default function DashboardPage() {
               It is the best time to manage your finances
             </p>
           </div>
-          <div className="flex items-center gap-4">
-            <button className="p-2 hover:bg-neutral-200 rounded-lg">
+          <div className="flex items-center gap-3">
+            <button className="p-2.5 hover:bg-neutral-200 rounded-xl transition-colors">
               <Search className="text-neutral-600" size={20} />
             </button>
-            <button className="p-2 hover:bg-neutral-200 rounded-lg relative">
+            <button className="p-2.5 hover:bg-neutral-200 rounded-xl transition-colors relative">
               <Bell className="text-neutral-600" size={20} />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-danger-500 rounded-full"></span>
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
-            <div className="flex items-center gap-2">
-              <div>
-                <p className="text-sm font-semibold text-neutral-900">
-                  {user?.name || "User"}
-                </p>
-                <p className="text-xs text-neutral-500">
-                  {user?.email || "No email"}
-                </p>
-              </div>
-            </div>
           </div>
         </div>
 
