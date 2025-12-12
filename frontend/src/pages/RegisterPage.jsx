@@ -3,11 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import API from "../api.js";
 
 export default function RegisterPage() {
-  const [form, setForm] = useState({ 
-    firstName: "", 
-    lastName: "", 
-    email: "", 
-    password: "" 
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -61,14 +61,7 @@ export default function RegisterPage() {
           name="email"
           type="email"
           placeholder="Email"
-         button
-          type="submit"
-          disabled={isLoading}
-          className="w-full py-2 rounded bg-emerald-500 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-600 transition-colors"
-        >
-          {isLoading ? "Creating account..." : "Sign up"}
-        </button>
-        < value={form.email}
+          value={form.email}
           onChange={handleChange}
           required
         />
@@ -82,6 +75,12 @@ export default function RegisterPage() {
           required
         />
         <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full py-2 rounded bg-emerald-500 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-600 transition-colors"
+        >
+          {isLoading ? "Creating account..." : "Sign up"}
+        </button>
         <p className="text-slate-300 text-sm">
           Already have an account?{" "}
           <Link className="text-emerald-400" to="/login">
