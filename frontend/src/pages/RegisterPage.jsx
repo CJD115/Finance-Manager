@@ -3,8 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import API from "../api.js";
 
 export default function RegisterPage() {
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ 
+    firstName: "", 
+    lastName: "", 
+    email: "", 
+    password: "" 
+  });
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) =>
@@ -13,11 +19,14 @@ export default function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
     try {
       await API.post("/auth/register", form);
       navigate("/login");
     } catch (err) {
       setError(err.response?.data?.message || "Error registering");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -31,11 +40,37 @@ export default function RegisterPage() {
         {error && <p className="text-red-400 text-sm">{error}</p>}
         <input
           className="w-full p-2 rounded bg-slate-700 text-white"
+          name="firstName"
+          type="text"
+          placeholder="First Name"
+          value={form.firstName}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="w-full p-2 rounded bg-slate-700 text-white"
+          name="lastName"
+          type="text"
+          placeholder="Last Name"
+          value={form.lastName}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="w-full p-2 rounded bg-slate-700 text-white"
           name="email"
           type="email"
           placeholder="Email"
-          value={form.email}
+         button
+          type="submit"
+          disabled={isLoading}
+          className="w-full py-2 rounded bg-emerald-500 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-600 transition-colors"
+        >
+          {isLoading ? "Creating account..." : "Sign up"}
+        </button>
+        < value={form.email}
           onChange={handleChange}
+          required
         />
         <input
           className="w-full p-2 rounded bg-slate-700 text-white"
@@ -44,10 +79,9 @@ export default function RegisterPage() {
           placeholder="Password"
           value={form.password}
           onChange={handleChange}
+          required
         />
-        <button className="w-full py-2 rounded bg-emerald-500 text-white font-semibold">
-          Sign up
-        </button>
+        <button
         <p className="text-slate-300 text-sm">
           Already have an account?{" "}
           <Link className="text-emerald-400" to="/login">

@@ -139,7 +139,7 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-3xl font-bold text-neutral-900">
-              Welcome back, {user?.name || "User"}!
+              Welcome back, {user?.firstName || "User"}!
             </h1>
             <p className="text-neutral-500 text-sm mt-1">
               It is the best time to manage your finances

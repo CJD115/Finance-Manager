@@ -16,18 +16,19 @@ const loginLimiter = rateLimit({
 // POST /auth/register
 router.post("/register", loginLimiter, async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
 
-    if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Email and password are required" });
+    if (!firstName || !lastName || !email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
     }
 
-    if (!email.trim() || !password.trim()) {
-      return res
-        .status(400)
-        .json({ message: "Email and password cannot be empty" });
+    if (
+      !firstName.trim() ||
+      !lastName.trim() ||
+      !email.trim() ||
+      !password.trim()
+    ) {
+      return res.status(400).json({ message: "Fields cannot be empty" });
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -46,6 +47,8 @@ router.post("/register", loginLimiter, async (req, res) => {
 
     // Create user
     const user = new User({
+      firstName,
+      lastName,
       email,
       password: hashedPassword,
     });
@@ -98,7 +101,15 @@ router.post("/login", loginLimiter, async (req, res) => {
       expiresIn: "24h",
     });
 
-    return res.json({ token });
+    return res.json({
+      token,
+      user: {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      },
+    });
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).json({ message: "Server error" });

@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useTheme } from "../hooks/useTheme";
 import { useState } from "react";
+import ProfileDropdown from "./ProfileDropdown";
 import {
   LayoutDashboard,
   CreditCard,
@@ -143,46 +144,36 @@ export default function AppSidebar() {
         </MenuItem>
       </Menu>
 
-      <div className="absolute bottom-0 w-full border-t border-neutral-200 p-2">
-        <Menu
-          menuItemStyles={{
-            button: {
-              color: isDarkMode ? "#a1a1a9" : "#56565E",
-              borderRadius: "8px",
-              padding: "12px",
-              "&:hover": {
-                backgroundColor: isDarkMode ? "#343438" : "#D0D0D4",
-              },
-            },
-          }}
-        >
-          <MenuItem icon={<HelpCircle size={20} />}>Help</MenuItem>
-          <MenuItem icon={<LogOut size={20} />} onClick={handleLogout}>
-            Log out
-          </MenuItem>
-        </Menu>
+      <div className="absolute bottom-0 w-full border-t border-neutral-200 p-3">
+        {/* Profile Dropdown */}
+        <div className="mb-2">
+          <ProfileDropdown collapsed={collapsed} />
+        </div>
 
+        {/* Theme Toggle */}
         {!collapsed && (
-          <div className="flex items-center gap-2 px-4 py-3">
+          <div className="flex items-center gap-2 px-1">
             <button
               onClick={toggleTheme}
-              className={`w-10 h-10 rounded-full flex items-center justify-center transition ${
+              className={`flex-1 h-10 rounded-lg flex items-center justify-center gap-2 transition ${
                 !isDarkMode
                   ? "bg-primary-600 text-white"
                   : "bg-neutral-700 text-neutral-400"
               }`}
             >
               <Sun size={18} />
+              {!collapsed && <span className="text-sm font-medium">Light</span>}
             </button>
             <button
               onClick={toggleTheme}
-              className={`w-10 h-10 rounded-full flex items-center justify-center transition ${
+              className={`flex-1 h-10 rounded-lg flex items-center justify-center gap-2 transition ${
                 isDarkMode
                   ? "bg-primary-600 text-white"
                   : "bg-neutral-300 text-neutral-600"
               }`}
             >
               <Moon size={18} />
+              {!collapsed && <span className="text-sm font-medium">Dark</span>}
             </button>
           </div>
         )}

@@ -14,6 +14,7 @@ export default function LoginPage() {
 
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -22,20 +23,25 @@ export default function LoginPage() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     try {
       const res = await API.post("/auth/login", form);
       setToken(res.data.token);
 
       setUser({
-        email: form.email,
-        name: form.email.split("@")[0],
+        id: res.data.user.id,
+        firstName: res.data.user.firstName,
+        lastName: res.data.user.lastName,
+        email: res.data.user.email,
       });
 
       navigate("/");
     } catch (err) {
       setError("Invalid login. Please try again.");
       console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -133,9 +139,10 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition"
+              disabled={isLoading}
+              className="w-full py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Sign in
+              {isLoading ? "Signing in..." : "Sign in"}
             </button>
 
             <div className="relative my-6">
